@@ -13,11 +13,16 @@ public class SecurityFilter implements ContainerRequestFilter {
     @Inject
     AuthenticationContextImpl authCtx;
 
+    @Inject
+    JwtTokenProvider jwtTokenProvider;
+
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
-        String sessionId = requestContext.getHeaders().getFirst(AUTH_HEADER);
+        String authToken = requestContext.getHeaders().getFirst(AUTH_HEADER);
         // TODO: implement session mechanism or JWT parser and set current User to authCtx
+        if (jwtTokenProvider.validateToken(authToken)) {
 
-        authCtx.setCurrentUser(null);
+            authCtx.setCurrentUser(null);
+        }
     }
 }

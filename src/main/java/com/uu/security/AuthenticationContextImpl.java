@@ -1,6 +1,6 @@
 package com.uu.security;
 
-import com.uu.orm.panache.User;
+import com.uu.user.User;
 
 import javax.enterprise.context.RequestScoped;
 
