@@ -1,7 +1,10 @@
 package com.uu.security;
 
 import com.uu.user.User;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -9,19 +12,17 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Dependent;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Slf4j
 @ApplicationScoped
-@Dependent
 public class JwtTokenProvider {
     @ConfigProperty(name = "jwt.secret")
-    private String JWT_SECRET;
+    String JWT_SECRET;
 
     @ConfigProperty(name = "jwt.expired")
-    private long JWT_EXPIRATION = 604800000L;
+    long JWT_EXPIRATION = 604800000L;
 
     private SecretKey key = null;
 
