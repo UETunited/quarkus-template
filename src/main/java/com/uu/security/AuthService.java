@@ -9,6 +9,8 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -30,7 +32,7 @@ public class AuthService {
 
     public Uni<LoginResponse> login(LoginRequest loginRequest) {
         return verify(loginRequest.getUsername(), loginRequest.getPassword())
-                .map(this::createToken)
+                .onItem().transform(this::createToken)
                 .onFailure().transform(failure -> new UnauthorizedException(failure.getCause()));
     }
 
@@ -38,6 +40,8 @@ public class AuthService {
         String token = Jwt.issuer(issuer)
                 .upn(user.getUsername())
                 .groups(new HashSet<>(Arrays.asList("USER"))) // default role USER
+                .claim("abc", "Def")
+                .expiresIn(Duration.of(7, ChronoUnit.DAYS))
 //                .claim(Claims.birthdate.name(), "2001-07-13")
                 // TODO: add more claims add your app needed
                 .sign();

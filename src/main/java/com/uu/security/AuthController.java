@@ -6,6 +6,7 @@ import io.smallrye.jwt.build.Jwt;
 import io.smallrye.mutiny.Uni;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.microprofile.jwt.Claims;
+import org.eclipse.microprofile.jwt.JsonWebToken;
 
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +31,9 @@ public class AuthController {
     @Inject
     AuthService authService;
 
+    @Inject
+    JsonWebToken jwt;
+
     @POST
     @Path("/login")
     @PermitAll
@@ -39,9 +43,7 @@ public class AuthController {
 
     @POST
     @Path("/logout")
-    @RolesAllowed({"USER", "ADMIN"})
-    public CommonResponse logout(@Context SecurityContext ctx) {
-        log.info("principal {}", ctx.getUserPrincipal());
+    public CommonResponse logout() {
         return CommonResponse.success(null);
     }
 
