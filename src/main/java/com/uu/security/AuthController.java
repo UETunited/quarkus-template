@@ -33,14 +33,8 @@ public class AuthController {
     @POST
     @Path("/login")
     @PermitAll
-    public Uni<User> authenticateUser(LoginRequest loginRequest) {
-        return authService.verify(loginRequest.getUsername(), loginRequest.getPassword());
-//        String token = Jwt.issuer("https://uetunited.com/issuer")
-//                .upn("jdoe@quarkus.io")
-//                .groups(new HashSet<>(Arrays.asList("USER", "ADMIN")))
-//                .claim(Claims.birthdate.name(), "2001-07-13")
-//                .sign();
-//        return new LoginResponse(token);
+    public Uni<LoginResponse> authenticateUser(LoginRequest loginRequest) {
+        return authService.login(loginRequest);
     }
 
     @POST
@@ -54,7 +48,7 @@ public class AuthController {
     @POST
     @Path("/register")
     @PermitAll
-    public CommonResponse register(RegisterRequest registerRequest) {
-        return CommonResponse.success(null);
+    public Uni<CommonResponse> register(RegisterRequest registerRequest) {
+        return authService.register(registerRequest).onItem().transform(item -> CommonResponse.success(null));
     }
 }
